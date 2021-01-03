@@ -81,22 +81,23 @@ fn main() -> Result<()> {
 
         let q = &questions[state.current_no - 1];
         let is_correct: bool;
-        let read_line = |ans: &str| -> Result<String> {
+        let read_line = |state: &State, ans: &str, allow_empty: bool| -> Result<String> {
             loop {
                 let line: String = text_io::read!("{}\n");
-                if line.is_empty() {
-                    continue;
+                let line = line.trim().to_owned();
+                match line.as_str() {
+                    "" if allow_empty => continue,
+                    "h" | "H" => {
+                        println!("提示：{}", ans);
+                        continue;
+                    }
+                    "s" | "S" => {
+                        save_state(&STATE_PATH, state)?;
+                        println!("保存成功");
+                        continue;
+                    }
+                    _ => break Ok(line),
                 }
-                if let "h" | "H" = line.as_str() {
-                    println!("提示：{}", ans);
-                    continue;
-                }
-                if let "s" | "S" = line.as_str() {
-                    save_state(&STATE_PATH, &state)?;
-                    println!("保存成功");
-                    continue;
-                }
-                break Ok(line);
             }
         };
         let ans = match q {
@@ -105,7 +106,7 @@ fn main() -> Result<()> {
                 for (label, content) in choices {
                     println!("       {}. {}", label, content);
                 }
-                let line = read_line(ans)?;
+                let line = read_line(&state, ans, true)?;
                 is_correct = choices
                     .keys()
                     .any(|label| label.eq_ignore_ascii_case(&line));
@@ -118,7 +119,7 @@ fn main() -> Result<()> {
                     println!("       {}. {}", label, content);
                 }
                 let ans_str = format!("{:?}", ans);
-                let line = read_line(&ans_str)?;
+                let line = read_line(&state, &ans_str, true)?;
                 let user_ans = line
                     .split("")
                     .map(ToOwned::to_owned)
@@ -129,7 +130,7 @@ fn main() -> Result<()> {
             Question::TrueOrFalse { text, ans } => {
                 println!("[判断] {}", text);
                 let ans_str = if *ans { "对" } else { "错" };
-                let line = read_line(ans_str)?;
+                let line = read_line(&state, ans_str, true)?;
                 match line.as_str() {
                     "t" | "T" => is_correct = *ans,
                     "f" | "F" => is_correct = !*ans,
@@ -157,7 +158,7 @@ fn main() -> Result<()> {
         }
 
         {
-            let _: String = text_io::read!("{}\n");
+            read_line(&state, &ans, false)?;
             crossterm::execute!(
                 stdout(),
                 terminal::Clear(ClearType::All),
