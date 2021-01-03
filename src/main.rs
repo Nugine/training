@@ -107,10 +107,7 @@ fn main() -> Result<()> {
                     println!("       {}. {}", label, content);
                 }
                 let line = read_line(&state, ans, true)?;
-                is_correct = choices
-                    .keys()
-                    .any(|label| label.eq_ignore_ascii_case(&line));
-
+                is_correct = line.eq_ignore_ascii_case(ans);
                 ans.to_owned()
             }
             Question::MultiAns { text, choices, ans } => {
