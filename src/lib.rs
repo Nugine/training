@@ -21,15 +21,16 @@ pub enum Question {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct State {
-    pub current_no: usize,
-    pub question_states: BTreeMap<usize, QuestionState>,
-    pub completed_count: usize,
+    pub recent_incorrect: Vec<usize>,
+    pub recent_correct: Vec<usize>,
+    pub questions_states: Vec<QuestionState>,
     pub complete_threshold: usize,
+    pub total_questions: usize,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct QuestionState {
-    pub is_completed: bool,
+    pub no: usize,
     pub try_count: usize,
     pub failed_count: usize,
     pub correct_count: usize,
