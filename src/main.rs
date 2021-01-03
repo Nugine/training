@@ -84,6 +84,9 @@ fn main() -> Result<()> {
         let read_line = |ans: &str| -> Result<String> {
             loop {
                 let line: String = text_io::read!("{}\n");
+                if line.is_empty() {
+                    continue;
+                }
                 if let "h" | "H" = line.as_str() {
                     println!("提示：{}", ans);
                     continue;
