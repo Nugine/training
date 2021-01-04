@@ -11,7 +11,7 @@ use rand::seq::SliceRandom;
 use training::{Question, QuestionState, State};
 
 static QUESTIONS: Lazy<Vec<Question>> = Lazy::new(|| {
-    const QUESTIONS_JSON: &str = include_str!("../data/questions.json");
+    const QUESTIONS_JSON: &str = include_str!("../data/马原.json");
     serde_json::from_str(QUESTIONS_JSON).unwrap()
 });
 
