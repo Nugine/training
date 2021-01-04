@@ -191,7 +191,7 @@ fn main() -> Result<()> {
                     .filter(|&&k| ans.iter().any(|a| &choices[a] == shuffled_choices[k]))
                     .map(|&k| k.to_owned())
                     .collect::<BTreeSet<_>>();
-                let ans_str = format!("{:?}", shuffled_ans);
+                let ans_str = shuffled_ans.iter().map(|s| s.as_str()).collect::<String>();
                 let line = read_line(&state, &ans_str, true)?;
                 let user_ans = line
                     .split("")
