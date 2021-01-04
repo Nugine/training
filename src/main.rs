@@ -123,9 +123,19 @@ fn main() -> Result<()> {
 
         let qs = &state.questions_states[qs_idx];
         println!(
-            "训练进度 {:>4}/{:>4}",
+            "训练进度 {:>4}/{:>4} 题目余量 {} + {}",
             state.total_questions - state.questions_states.len(),
-            state.total_questions
+            state.total_questions,
+            state
+                .questions_states
+                .iter()
+                .filter(|s| s.try_count > 0)
+                .count(),
+            state
+                .questions_states
+                .iter()
+                .filter(|s| s.try_count == 0)
+                .count(),
         );
 
         println!(
