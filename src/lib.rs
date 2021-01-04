@@ -26,6 +26,7 @@ pub struct State {
     pub questions_states: Vec<QuestionState>,
     pub complete_threshold: usize,
     pub total_questions: usize,
+    pub version: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

@@ -11,7 +11,7 @@ use rand::seq::SliceRandom;
 use training::{Question, QuestionState, State};
 
 static QUESTIONS: Lazy<Vec<Question>> = Lazy::new(|| {
-    const QUESTIONS_JSON: &str = include_str!("../data/马原.json");
+    const QUESTIONS_JSON: &str = include_str!("../data/近代史.json");
     serde_json::from_str(QUESTIONS_JSON).unwrap()
 });
 
@@ -37,6 +37,7 @@ fn init_state() -> State {
         total_questions: qss.len(),
         questions_states: qss,
         complete_threshold: 3,
+        version: "0.2.0".to_owned(),
     }
 }
 
