@@ -254,6 +254,7 @@ fn main() -> Result<()> {
         }
 
         {
+            save_state(STATE_PATH, &state)?;
             read_line(&state, &ans_str, false)?;
             crossterm::execute!(
                 stdout(),
