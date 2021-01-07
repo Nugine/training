@@ -5,6 +5,7 @@ use std::io::stdout;
 
 use anyhow::{Context, Result};
 use crossterm::cursor;
+use crossterm::style::{Color, Print, ResetColor, SetForegroundColor};
 use crossterm::terminal::{self, ClearType};
 use once_cell::sync::Lazy;
 use rand::seq::SliceRandom;
@@ -96,7 +97,7 @@ fn main() -> Result<()> {
 
         let qs_idx = {
             let select_recent_incorrect =
-                !state.recent_incorrect.is_empty() && rand::random::<f64>() > 0.618;
+                !state.recent_incorrect.is_empty() && rand::random::<f64>() > 0.8;
 
             if select_recent_incorrect {
                 let no = state.recent_incorrect[0];
@@ -107,7 +108,7 @@ fn main() -> Result<()> {
                     .unwrap()
             } else {
                 let select_recent_correct =
-                    !state.recent_correct.is_empty() && rand::random::<f64>() > 0.618;
+                    !state.recent_correct.is_empty() && rand::random::<f64>() > 0.8;
 
                 if select_recent_correct {
                     let no = state.recent_correct[0];
@@ -238,7 +239,15 @@ fn main() -> Result<()> {
                     state.questions_states.remove(qs_idx);
                 }
                 state.questions_states.shuffle(&mut rand::thread_rng());
-                println!("正确！答案：{}", ans_str);
+
+                crossterm::execute!(
+                    stdout(),
+                    SetForegroundColor(Color::Green),
+                    Print(format!("正确！答案：{}\n", ans_str)),
+                    ResetColor,
+                )?;
+
+            // println!("正确！答案：{}", ans_str);
             } else {
                 qs.correct_count = 0;
                 qs.failed_count += 1;
@@ -250,7 +259,15 @@ fn main() -> Result<()> {
                 {
                     state.recent_incorrect.push(qs.no);
                 }
-                println!("错误！答案：{}", ans_str);
+
+                crossterm::execute!(
+                    stdout(),
+                    SetForegroundColor(Color::Red),
+                    Print(format!("错误！答案：{}\n", ans_str)),
+                    ResetColor,
+                )?;
+
+                // println!("错误！答案：{}", ans_str);
             }
         }
 
